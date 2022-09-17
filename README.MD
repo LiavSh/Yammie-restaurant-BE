@@ -10,7 +10,7 @@ for furture information, visit [MongoDb.](https://www.mongodb.com/docs/manual/ad
 
 In the project directory, you can run:
 ```
-$npm start
+npm start
 ```
 The server will run on [http://localhost:3000](http://localhost:3000).
 
@@ -18,7 +18,8 @@ The server will run on [http://localhost:3000](http://localhost:3000).
 
 ### Get today's orders
 
- In order to get today's orders, send a `Get` request via [http://localhost:3000/orders](http://localhost:3000/orders). the output will be received in .JSON format.
+ In order to get today's orders, send a `Get` request via [http://localhost:3000/orders](http://localhost:3000/orders). the output will be\
+received in .JSON format.
 
 ### Post new order
  In order to post a new order, send a `Post` request via [http://localhost:3000/orders](http://localhost:3000/orders) with the following data fields[^1]:
