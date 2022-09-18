@@ -13,24 +13,30 @@ app.use(
 );
 
 app.route("/orders")
-// API request - get all order of today
+  // request API - get all order of the last day
   .get(function (req, res) {
     const startOfDayDate = dayjs().startOf("day").toDate(); // set to 12:00 am today
     const endOfDayDate = dayjs().endOf("day").toDate(); // set to 23:59 pm today
 
     Order.find(
       { date: { $gte: startOfDayDate, $lt: endOfDayDate } },
-      function (err, ordersFound) {
+      function (err, dbOrders) {
         if (!err) {
-          res.send(ordersFound);
+          const orders = dbOrders.map(({ items, status, price, _id }) => ({
+            items,
+            status,
+            price,
+            id: _id,
+          }));
+          res.send(orders);
         } else {
           res.status(400);
-          console.error(err);
+          console.error("Reading orders from DB error", err);
         }
       }
     );
   })
-  // API post -  Post a new order
+  // post API -  Post a new order
   .post(function (req, res) {
     const { price, status, items } = req.body;
     const newOrder = new Order({
@@ -40,17 +46,17 @@ app.route("/orders")
       price,
     });
 
-    const validationCheck = validateOrder(newOrder);
-    if (validationCheck) {
-      console.error(validationCheck);
-      res.status(400); // stuck
+    const error = validateOrder(newOrder);
+    if (error) {
+      console.error(error);
+      res.status("Db parameters error", 400);
     } else {
       newOrder.save(function (err) {
         if (!err) {
           res.send("Order successfully placed");
         } else {
-          console.error(err);
-          res.send(err);
+          console.error("Posting orders to DB error", err);
+          res.status(400);
         }
       });
     }
